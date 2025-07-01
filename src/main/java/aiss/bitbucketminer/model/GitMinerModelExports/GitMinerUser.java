@@ -11,16 +11,23 @@ public class GitMinerUser {
 
     private String web_url;
 
+    private String nickname;
+
+    private String accountStatus;
+
+
     public GitMinerUser() {
     }
 
     public GitMinerUser(String id, String username, String name,
-                        String state, String avatar_url, String web_url) {
+                        String state, String avatar_url, String web_url,  String nickname, String accountStatus) {
         this.id = id;
         this.username = username;
         this.name = name;
         this.avatar_url = avatar_url;
         this.web_url = web_url;
+        this.nickname = nickname;
+        this.accountStatus = accountStatus;
     }
 
     public String getId() {
@@ -62,5 +69,11 @@ public class GitMinerUser {
     public void setWeb_url(String web_url) {
         this.web_url = web_url;
     }
+
+    public String getNickname() {return nickname;}
+    public void setNickname(String nickname) {this.nickname = nickname;}
+
+    public String getAccountStatus() {return accountStatus;}
+    public void setAccountStatus(String accountStatus) {this.accountStatus = accountStatus;}
 
 }

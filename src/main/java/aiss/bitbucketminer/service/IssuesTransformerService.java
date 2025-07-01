@@ -61,8 +61,12 @@ public class IssuesTransformerService {
             issue.setAuthor(author);
             issue.setAssignee(null);
 
+            issue.setKind(value.getKind());
+            issue.setWatches(value.getWatches());
+
             // Agregar la issue transformada a la lista de resultados
             resultIssues.add(issue);
+
         }
 
         return resultIssues;

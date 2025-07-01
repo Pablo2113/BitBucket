@@ -13,6 +13,8 @@ public class UserTransformerService {
             user.setName(userdata.getDisplayName());
             user.setAvatar_url(userdata.getLinks().getAvatar().getHref());
             user.setWeb_url(userdata.getLinks().getSelf().getHref());
+            user.setAccountStatus(userdata.getAccountStatus());
+            user.setNickname(userdata.getNickname());
 
             return user;
 }

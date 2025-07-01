@@ -17,16 +17,22 @@ public class GitMinerProject {
 
     private List<GitMinerIssues> issues;
 
+    private String language;
+
+    private Boolean isPrivate;
+
     public GitMinerProject() {
 
     }
 
-    public GitMinerProject(String id, String name, String web_url) {
+    public GitMinerProject(String id, String name, String web_url, String language, Boolean isPrivate) {
         this.id= id;
         this.name = name;
         this.web_url = web_url;
         this.issues = new ArrayList<>();
         this.commits = new ArrayList<>();
+        this.language = language;
+        this.isPrivate = isPrivate;
     }
 
     public void addCommit(GitMinerCommit commit) {
@@ -83,5 +89,12 @@ public class GitMinerProject {
     public void setIssues(List<GitMinerIssues> issues) {
         this.issues = issues;
 
+
     }
+
+    public String getLanguage() {return language;}
+    public void setLanguage(String language) {this.language = language;}
+
+    public Boolean getIsPrivate() { return isPrivate; }
+    public void setIsPrivate(Boolean isPrivate) { this.isPrivate = isPrivate; }
 }

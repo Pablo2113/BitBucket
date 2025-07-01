@@ -1,6 +1,8 @@
 package aiss.bitbucketminer.model.GitMinerModelExports;
 
 
+import aiss.bitbucketminer.model.COMMIT_POJO.Rendered;
+import aiss.bitbucketminer.model.COMMIT_POJO.Repository;
 
 public class GitMinerCommit {
 
@@ -18,12 +20,17 @@ public class GitMinerCommit {
 
     private String web_url;
 
+    private Rendered rendered;
+
+    private Repository repository;
+
 
 
     public GitMinerCommit() {
     }
 
-    public GitMinerCommit(String title, String message, String author_name, String author_email, String authored_date, String web_url) {
+    public GitMinerCommit(String title, String message, String author_name, String author_email,
+                          String authored_date, String web_url,  Rendered rendered, Repository repository) {
         this.id= id;
         this.title = title;
         this.message = message;
@@ -31,6 +38,8 @@ public class GitMinerCommit {
         this.author_email = author_email;
         this.authored_date = authored_date;
         this.web_url = web_url;
+        this.rendered = rendered;
+        this.repository = repository;
     }
 
     public String  getId() {
@@ -87,5 +96,10 @@ public class GitMinerCommit {
     public void setWeb_url(String web_url) {
         this.web_url = web_url;
     }
+
+    public Rendered getRendered() {return rendered;}
+    public void setRendered(Rendered rendered) {this.rendered = rendered;}
+    public Repository getRepository() {return repository;}
+    public void setRepository(Repository repository) {this.repository = repository;}
 
 }

@@ -51,6 +51,12 @@ public class CommitTransformerService {
             if (value.getLinks() != null && value.getLinks().getHtml() != null) {
                 commit.setWeb_url(value.getLinks().getHtml().getHref());
             }
+            if (value.getRendered() != null) {
+                commit.setRendered(value.getRendered());
+            }
+            if(value.getRepository() != null) {
+                commit.setRepository(value.getRepository());
+            }
             gitMinerCommits.add(commit);
 
 

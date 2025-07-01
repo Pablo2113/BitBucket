@@ -42,6 +42,9 @@ public class ProjectTransformerService {
             }
                 project.setIssues(issues);
 
+        project.setLanguage(bitbucketRepo.getLanguage());
+        project.setIsPrivate(bitbucketRepo.getIsPrivate());
+
 
         return project;
     }

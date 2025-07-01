@@ -34,6 +34,10 @@ public class GitMinerIssues {
 
     private GitMinerUser author;
 
+    private String kind;
+
+    private Integer watches;
+
 
     // Constructor vacío
     public GitMinerIssues() {
@@ -42,7 +46,8 @@ public class GitMinerIssues {
 
     // Constructor con parámetros
     public GitMinerIssues(String id, String title, String description, String state, String created_at,
-                          String updated_at, String closed_at, List<String> labels, Integer votes) {
+                          String updated_at, String closed_at, List<String> labels,
+                          Integer votes, String kind, Integer watches) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -55,6 +60,8 @@ public class GitMinerIssues {
         this.comments = new ArrayList<>();
         this.author= new GitMinerUser();
         this.assignee = new GitMinerUser();
+        this.kind = kind;
+        this.watches = watches;
     }
 
     public GitMinerUser getAssignee() {
@@ -164,4 +171,12 @@ public class GitMinerIssues {
     public void setProject(GitMinerProject gitMinerProject) {
         this.gitminerproject = gitMinerProject;
     }
+
+    public String getKind() {return kind;}
+
+    public void setKind(String kind) {this.kind = kind;}
+
+    public Integer getWatches() {return watches;}
+
+    public void setWatches(Integer watches) {this.watches = watches;}
 }
