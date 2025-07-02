@@ -1,5 +1,6 @@
 package aiss.bitbucketminer.service;
 
+import aiss.bitbucketminer.controller.BitbucketController;
 import aiss.bitbucketminer.model.COMMENT_POJO.Comments;
 import aiss.bitbucketminer.model.COMMIT_POJO.Commit;
 import aiss.bitbucketminer.model.ISSUES_POJO.Issues;
@@ -17,10 +18,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 
+
+
 @Service
 public class BitbucketService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BitbucketService.class);
+    private static final Logger log = LoggerFactory.getLogger(BitbucketService.class);
+
+
     private final RestTemplate restTemplate;
     private static final String BITBUCKET_API_BASE_URL = "https://api.bitbucket.org/2.0";
     private final String username = "modal175175";
@@ -41,17 +46,22 @@ public class BitbucketService {
             url += "&page=" + maxPages;
         }
 
+        log.info("Fetching commits from Bitbucket for {}/{}. URL: {}", workspace, repoSlug, url);
+
+
         try {
             // Petición GET simple usando RestTemplate
             Commit response = restTemplate.getForObject(url, Commit.class);
 
             if (response == null) {
-                logger.warn("La respuesta de la API de Bitbucket es nula para la URL: {}", url);
+                log.warn("Bitbucket API returned null response for URL: {}", url);
                 return null;
             }
+            log.info("Successfully fetched commits from Bitbucket. Total pages: {}, Page size: {}", maxPages, nCommits);
             return response;
         } catch (RestClientException e) {
-            logger.error("Error al realizar la solicitud a la API de Bitbucket: {}", e.getMessage());
+
+            log.error("Error during Bitbucket API request for commits: {}", e.getMessage());
             return null;
         }
     }
@@ -59,19 +69,20 @@ public class BitbucketService {
     public Commit_Repository getProjectsFromBitbucket(String workspace, String repoSlug) {
         String url = BITBUCKET_API_BASE_URL
                 + "/repositories/" + workspace + "/" + repoSlug;
+        log.info("Fetching repository data from Bitbucket for {}/{}. URL: {}", workspace, repoSlug, url);
 
         try {
 
             Commit_Repository response = restTemplate.getForObject(url, Commit_Repository.class);
 
             if (response == null) {
-                logger.warn("La respuesta de la API de Bitbucket es nula para la URL: {}", url);
+                log.warn("Bitbucket API returned null response for URL: {}", url);
                 return null;
             }
-
+            log.info("Successfully fetched repository data for {}/{}", workspace, repoSlug);
             return response;
         } catch (RestClientException e) {
-            logger.error("Error al realizar la solicitud a la API de Bitbucket: {}", e.getMessage());
+            log.error("Error during Bitbucket API request for repository data: {}", e.getMessage());
             return null;
         }
     }
@@ -90,13 +101,13 @@ public class BitbucketService {
             Issues response = restTemplate.getForObject(url, Issues.class);
 
             if (response == null) {
-                logger.warn("La respuesta de la API de Bitbucket es nula para la URL: {}", url);
+                log.warn("Bitbucket API returned null response for URL: {}", url);
                 return null;
             }
 
             return response;
         } catch (RestClientException e) {
-            logger.error("Error al realizar la solicitud a la API de Bitbucket: {}", e.getMessage());
+            log.error("Request error Bitbucket API: {}", e.getMessage());
             return null;
         }
     }
@@ -110,13 +121,13 @@ public class BitbucketService {
             Comments response = restTemplate.getForObject(url, Comments.class);
 
             if (response == null) {
-                logger.warn("La respuesta de la API de Bitbucket es nula para la URL: {}", url);
+                log.warn("Bitbucket API returned null response for URL: {}", url);
                 return null;
             }
 
             return response;
         } catch (RestClientException e) {
-            logger.error("Error al realizar la solicitud a la API de Bitbucket: {}", e.getMessage());
+            log.error("Request error Bitbucket API: {}", e.getMessage());
             return null;
         }
     }
@@ -141,13 +152,13 @@ public class BitbucketService {
             HttpEntity<String> entity = new HttpEntity<>(headers);
             ResponseEntity<Users> response = restTemplate.exchange(url, HttpMethod.GET, entity, Users.class);
             if (response.getBody() == null) {
-                logger.warn("La respuesta de la API de Bitbucket es nula para la URL: {}", url);
+                log.warn("Bitbucket API returned null response for URL: {}", url);
                 return null;
             }
 
             return response.getBody();
         } catch (RestClientException e) {
-            logger.error("Error al realizar la solicitud a la API de Bitbucket: {}", e.getMessage());
+            log.error("Request error Bitbucket API: {}", e.getMessage());
             return null;
         }
     }
