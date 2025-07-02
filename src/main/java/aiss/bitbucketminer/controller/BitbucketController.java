@@ -71,12 +71,19 @@ public class BitbucketController {
             @RequestParam(defaultValue = "2") Integer maxPages,
             @RequestParam(defaultValue = "5") Integer nIssues
 ) {
+        log.info("Starting to retrieve project data from Bitbucket for repo: {}/{}", workspace, repoSlug);
+
 
         Commit_Repository repoData = bitbucketService.getProjectsFromBitbucket(workspace, repoSlug);
+        log.info("Repository data retrieved successfully.");
+
         Commit commitData = bitbucketService.getCommitsFromBitbucket(workspace, repoSlug, nCommits, maxPages);
+        log.info("Commits transformed successfully. Total: {}", nCommits);
+
         List<GitMinerCommit> commits = CommitTransformerService.transform(commitData);
 
         Issues issuesData = bitbucketService.getIssuesFromBitbucket(workspace, repoSlug,nIssues,maxPages);
+        log.info("Issue data retrieved. Processing issues...");
         List<GitMinerIssues> issues = new ArrayList<>();
         List<GitMinerUser> allusers = new ArrayList<>();
 
@@ -99,6 +106,7 @@ public class BitbucketController {
                     }
                 }
             }
+            log.info("Issues and comments processed. Filtering unique issues...");
 
             List<GitMinerIssues> transformedIssues = IssuesTransformerService.transform(issuesData, comments, allusers);
             if (transformedIssues != null && !transformedIssues.isEmpty()) {
@@ -113,7 +121,10 @@ public class BitbucketController {
                 ListaIssues.add(issue);
             }
         }
+
+        log.info("Final issue list prepared. Total unique issues: {}", ListaIssues.size());
         GitMinerProject project = projectTransformerService.transform(repoData, commits, ListaIssues);
+        log.info("Project transformed successfully. Returning response.");
         return ResponseEntity.ok(project);
     }
 
@@ -213,12 +224,21 @@ public class BitbucketController {
             @RequestParam(defaultValue = "5") Integer nIssues
     ) {
 
+        log.info("Starting POST process for repository: {}/{}", workspace, repoSlug);
+
         // Obtener datos del proyecto
         Commit_Repository repoData = bitbucketService.getProjectsFromBitbucket(workspace, repoSlug);
+        log.info("Repository data retrieved successfully.");
+
         Commit commitData = bitbucketService.getCommitsFromBitbucket(workspace, repoSlug, nCommits, maxPages);
+        log.info("Commit data retrieved. Transforming commits...");
+
         List<GitMinerCommit> commits = CommitTransformerService.transform(commitData);
+        log.info("Commits transformed successfully. Total: {}", nCommits);
 
         Issues issuesData = bitbucketService.getIssuesFromBitbucket(workspace, repoSlug,nIssues,maxPages);
+        log.info("Issue data retrieved. Processing issues...");
+
         List<GitMinerIssues> issues = new ArrayList<>();
         List<GitMinerUser> allusers = new ArrayList<>();
 
@@ -247,6 +267,8 @@ public class BitbucketController {
                 issues.addAll(transformedIssues);
             }
         }
+
+        log.info("Issues and comments processed. Filtering unique issues...");
         List<GitMinerIssues> ListaIssues = new ArrayList<>();
         Set<String> uniqueIds = new HashSet<>();
 
@@ -255,13 +277,18 @@ public class BitbucketController {
                 ListaIssues.add(issue);
             }
         }
+        log.info("Final issue list prepared. Total unique issues: {}", ListaIssues.size());
+
         GitMinerProject project = projectTransformerService.transform(repoData, commits, ListaIssues);
+        log.info("Project transformed successfully. Sending POST request to GitMiner...");
 
         // URL del servicio donde se guardará el proyecto
         String postUrl = "http://localhost:8080/gitminer/projects";
 
+
         // Realizar la petición POST
         ResponseEntity<GitMinerProject> response = restTemplate.postForEntity(postUrl, project, GitMinerProject.class);
+        log.info("POST request sent. Received status: {}", response.getStatusCode());
 
         // Devolver el estado y un mensaje de éxito
         return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
